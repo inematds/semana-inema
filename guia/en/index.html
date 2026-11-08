@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>semana-inema — the week without overload</title>
+<meta name="description" content="An open kit that puts together your community’s weekly post: what needs doing, members’ wins, and what you can ignore, for Telegram, email, and web.">
+<meta property="og:image" content="https://inematds.github.io/semana-inema/guia/assets/banner-en.jpg">
+<link rel="alternate" hreflang="pt-BR" href="https://inematds.github.io/semana-inema/guia/">
+<link rel="alternate" hreflang="en" href="https://inematds.github.io/semana-inema/guia/en/">
+<link rel="alternate" hreflang="es" href="https://inematds.github.io/semana-inema/guia/es/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0c0c10; --bg2:#14141b; --card:#16161e; --line:#272730;
+    --txt:#e9e9ee; --mut:#9a9aa6; --amb:#FACC15; --amb2:#f0c070; --sky:#38bdf8; --pro:#cbd5e1;
+    color-scheme:dark;
+  }
+  body.light{
+    --bg:#f6f7f9; --bg2:#eceef2; --card:#ffffff; --line:#e1e3ea;
+    --txt:#1a1a22; --mut:#5b5b68; --amb:#a16207; --amb2:#a16207; --sky:#0369a1; --pro:#b45309;
+    color-scheme:light;
+  }
+  body.light .hero .glow{opacity:.5}
+  body.light pre{background:#0e0e14;color:#d6d6e0}
+  body.light pre .c{color:#8a8a98}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.65 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:Sora,sans-serif;line-height:1.15;margin:0}
+  a{color:var(--amb);text-decoration:none}
+  code,pre{font-family:"JetBrains Mono",monospace}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 22px}
+  .mut{color:var(--mut)} .amb{color:var(--amb)}
+  .chip{display:inline-block;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--amb);font-weight:600;font-family:Sora}
+  nav{position:sticky;top:0;z-index:30;backdrop-filter:blur(12px);background:rgba(12,12,16,.78);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;gap:22px;height:60px}
+  nav .brand{display:flex;align-items:center;gap:8px;font-family:Sora;font-weight:800;letter-spacing:-.02em;color:var(--amb)}
+  nav .brand .emoji{font-size:1.25rem}
+  nav .sep{color:var(--mut);opacity:.45}
+  nav .inema{color:var(--sky);font-weight:600;font-size:.88rem;font-family:Sora}
+  nav .inema:hover{filter:brightness(1.15)}
+  nav .pro{color:var(--pro);font-weight:600;font-size:.88rem;font-family:Sora}
+  nav .pro:hover{filter:brightness(1.15)}
+  nav .clubpro{display:inline-flex;align-items:center;gap:6px}
+  nav .links{margin-left:auto;display:flex;align-items:center;gap:20px;font-size:.92rem}
+  nav .links a.sec{color:var(--mut)} nav .links a.sec:hover{color:var(--txt)}
+  .lang{display:inline-flex;gap:2px;font-family:Sora;font-size:.78rem}
+  .lang a{color:var(--mut);padding:.2em .45em;border-radius:6px} .lang a.on{color:var(--amb);background:rgba(250,204,21,.12)}
+  .tgl{background:var(--bg2);border:1px solid var(--line);color:var(--txt);width:38px;height:38px;border-radius:10px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:1.05rem}
+  .tgl:hover{border-color:var(--amb)}
+  .btn{display:inline-block;background:var(--amb);color:#1a1206;font-weight:600;padding:.6em 1.05em;border-radius:10px;font-family:Sora}
+  .btn.ghost{background:transparent;color:var(--txt);border:1px solid var(--line)}
+  @media(max-width:980px){nav .links a.sec{display:none}}
+  @media(max-width:520px){nav .wrap{gap:8px;padding:8px 14px;height:auto;flex-wrap:wrap} nav .links{gap:8px;margin-left:0;width:100%;justify-content:space-between} nav .btn{padding:.45em .7em;font-size:.82rem} .tgl{width:34px;height:34px}}
+  .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+  .hero .glow{position:absolute;inset:-40% -20% auto auto;width:70%;height:600px;background:radial-gradient(closest-side,rgba(250,204,21,.22),transparent 70%);pointer-events:none}
+  .hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding:74px 22px}
+  .hero h1{font-size:clamp(2.2rem,5vw,3.5rem);font-weight:800;letter-spacing:-.025em}
+  .hero p.lead{font-size:1.18rem;color:var(--mut);margin:1.1em 0 1.6em;max-width:34ch}
+  .hero .cta{display:flex;gap:12px;flex-wrap:wrap}
+  .hero figure{margin:0;border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 80px -30px #000}
+  .hero figure img{width:100%;height:auto;display:block}
+  .resumo{padding:38px 0 34px;border-bottom:1px solid var(--line)}
+  .resumo p{font-size:1.12rem;line-height:1.7;max-width:74ch;margin:.55em 0 0}
+  @media(max-width:780px){.hero .wrap{grid-template-columns:1fr;padding:48px 22px}}
+  section{padding:62px 0;border-bottom:1px solid var(--line)}
+  section h2{font-size:clamp(1.5rem,3.4vw,2.1rem);font-weight:800;letter-spacing:-.02em}
+  section .sub{color:var(--mut);margin:.6em 0 2em;max-width:62ch}
+  .grid{display:grid;gap:16px}
+  .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)} .g2{grid-template-columns:repeat(2,1fr)}
+  @media(max-width:820px){.g3,.g4{grid-template-columns:1fr 1fr}}
+  @media(max-width:540px){.g2,.g3,.g4{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .card h3{font-size:1.05rem;margin-bottom:.4em}
+  .card p{color:var(--mut);font-size:.92rem;margin:0}
+  .card pre{margin:.8em 0 0}
+  .num{display:inline-flex;width:30px;height:30px;align-items:center;justify-content:center;border-radius:8px;background:rgba(250,204,21,.14);color:var(--amb);font-family:Sora;font-weight:800;font-size:.9rem;margin-bottom:.7em}
+  .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+  .flow span{background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:.45em .9em;font-size:.85rem;font-family:Sora;font-weight:600}
+  .flow .arr{color:var(--amb);border:none;background:none;padding:0 .1em}
+  pre{background:#0a0a0e;border:1px solid var(--line);border-radius:12px;padding:16px 18px;overflow:auto;font-size:.86rem;line-height:1.6;color:#d6d6e0}
+  pre .c{color:#6f6f7c} pre .k{color:var(--amb2)} pre .s{color:#9ece6a}
+  .step{display:grid;grid-template-columns:46px minmax(0,1fr);gap:16px;margin-bottom:26px}
+  .step>div,.card{min-width:0}
+  p code,li code,td code{overflow-wrap:anywhere}
+  .step .b{width:46px;height:46px;border-radius:12px;background:var(--amb);color:#1a1206;font-family:Sora;font-weight:800;font-size:1.25rem;display:flex;align-items:center;justify-content:center}
+  .step h3{font-size:1.12rem;margin-bottom:.3em}
+  .step p{color:var(--mut);margin:.2em 0 .7em}
+  .ex{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+  @media(max-width:680px){.ex{grid-template-columns:1fr}}
+  .ex figure{margin:0;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+  .ex figure img{width:100%;height:auto;display:block}
+  .ex figcaption{padding:12px 14px;font-size:.88rem;color:var(--mut);background:var(--card)}
+  .phase{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
+  .phase:last-child{border:none}
+  .phase .tag{flex:0 0 92px;font-family:Sora;font-weight:800;color:var(--amb)}
+  .phase .d strong{display:block;margin-bottom:.2em}
+  .phase .d span{color:var(--mut);font-size:.92rem}
+  footer{padding:46px 0;text-align:center;color:var(--mut);font-size:.9rem}
+  .pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:.3em .8em;font-size:.78rem;color:var(--mut);margin:0 4px}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <a class="brand" href="#top"><span class="emoji">🗓️</span> semana-inema</a>
+  <span class="sep">|</span>
+  <span class="clubpro">
+    <a class="inema" href="https://inema.club" target="_blank" rel="noopener">INEMA.CLUB</a>
+    <span class="sep">-</span>
+    <a class="pro" href="https://inema.pro" target="_blank" rel="noopener">PRO</a>
+  </span>
+  <div class="links">
+    <a class="sec" href="#oque">The method</a>
+    <a class="sec" href="#fluxo">How it works</a>
+    <a class="sec" href="#guia">User guide</a>
+    <a class="sec" href="#exemplos">Example</a>
+    <span class="lang"><a href="../">PT</a><a class="on" href="./">EN</a><a href="../es/">ES</a></span>
+    <button class="tgl" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">🌙</button>
+    <a class="btn" href="https://github.com/inematds/semana-inema" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</div></nav>
+
+<header class="hero" id="top">
+  <div class="glow"></div>
+  <div class="wrap">
+    <div>
+      <span class="chip">Open kit · weekly community post</span>
+      <h1>Your community doesn’t need more content. It needs to know <span class="amb">what to do</span>.</h1>
+      <p class="lead">One post each week with the one thing to do, members’ wins, and what you can ignore. The kit creates the Telegram post, email, and page. You choose and paste.</p>
+      <div class="cta">
+        <a class="btn" href="#guia">Start the guide</a>
+        <a class="btn ghost" href="https://github.com/inematds/semana-inema" target="_blank" rel="noopener">View on GitHub</a>
+      </div>
+    </div>
+    <figure><img src="../assets/banner-en.jpg" alt="Banner: a week without overload — your community doesn’t need more content, it needs to know what to do"></figure>
+  </div>
+</header>
+
+<section id="resumo" class="resumo"><div class="wrap">
+  <span class="chip">In summary</span>
+  <p>semana-inema is a free kit for anyone who runs a community (Telegram group, WhatsApp group, class, email list). Every week, it reads what’s new in your sources and puts together a short edition with seven sections: The one thing to do, your case → your path, wins, what’s new, what you can ignore, where to ask for help, and who helped the most. It comes in three formats: a Telegram message, an email, and a page. You only need Python on your computer; nothing is published automatically.</p>
+</div></section>
+
+<section id="oque"><div class="wrap">
+  <span class="chip">The method</span>
+  <h2>A week without overload, in seven parts</h2>
+  <p class="sub">A new tool comes out every day. Anyone who tries to keep up with everything drowns and finishes nothing. The weekly edition does the opposite: it chooses for you and gives you permission to ignore the rest.</p>
+  <figure style="margin:0 0 26px;border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 80px -30px #000"><img src="../assets/banner-grade-en.jpg" alt="The six fixed parts of the edition: The one thing, your case and your path, wins, what arrived, you can ignore, and got stuck" loading="lazy" style="width:100%;display:block"></figure>
+  <div class="grid g3">
+    <div class="card"><div class="num">1</div><h3>The one thing</h3><p>Just one task, ending with a working result in the person's hands: a completed test, a running agent, a finished backup. "I watched the video" doesn't count. One thing done is worth more than ten left open.</p></div>
+    <div class="card"><div class="num">2</div><h3>Your case → your path</h3><p>A short table: "use ChatGPT every day → check this out," "serve customers on WhatsApp → check that out." Everyone finds their own row without reading the whole list.</p></div>
+    <div class="card"><div class="num">3</div><h3>Community wins</h3><p>Name, what made it work, and the link. Seeing someone like you get there is more convincing than any promise. Ask permission before mentioning their name.</p></div>
+    <div class="card"><div class="num">4</div><h3>What arrived</h3><p>The list of what came out that week, read from your sources, with a date and link. It's at the end on purpose: it's for reference, not a task.</p></div>
+    <div class="card"><div class="num">5</div><h3>You can ignore</h3><p>Two to four updates that can wait, with a reason why. This removes the guilt of not seeing everything, which is what makes the most people give up.</p></div>
+    <div class="card"><div class="num">6 · 7</div><h3>Got stuck? · Who helped most</h3><p>Where and how to ask for help (with a screenshot of the error and the command you ran), plus a manual ranking of people who answered questions. Helpers get recognized, and the group learns to help one another.</p></div>
+  </div>
+  <div class="ex" style="margin-top:26px">
+    <figure><img src="../assets/metodo.jpg" alt="Relaxed person having coffee by the window" loading="lazy"><figcaption>The goal isn't to know everything that came out. It's to finish the week with one thing working.</figcaption></figure>
+    <div class="card"><h3>Why it works</h3><p style="margin-bottom:.8em">People who join an AI community see dozens of updates a week. Without someone saying "start here," they save everything for later and do nothing.</p><p style="margin-bottom:.8em">The edition replaces "more content" with "one decision": the moderator (or an agent, using the kit's ready-made prompt) picks the one thing using a fixed criterion, shows who has already succeeded, and says what can be set aside.</p><p>The kit doesn't decide on its own or publish anything. It brings the material together and creates the three formats; the choice and sending are still up to you.</p></div>
+  </div>
+</div></section>
+
+<section id="fluxo"><div class="wrap">
+  <span class="chip">How it works</span>
+  <h2>From the week’s sources to a ready-to-publish post</h2>
+  <p class="sub">Two commands and one choice in between. Everything runs on your computer, offline and without any API keys.</p>
+  <div class="flow">
+    <span>Your sources</span><span class="arr">→</span>
+    <span>semana.py rascunho</span><span class="arr">→</span>
+    <span>rascunho.md</span><span class="arr">→</span>
+    <span>you or the agent chooses</span><span class="arr">→</span>
+    <span>edicao.md</span><span class="arr">→</span>
+    <span>semana.py gerar</span><span class="arr">→</span>
+    <span>telegram.md · email.html · pagina.html</span><span class="arr">→</span>
+    <span>you publish</span>
+  </div>
+  <div class="grid g3" style="margin-top:26px">
+    <div class="card"><h3>Sources for “What’s new”</h3><p>Three types, configured in <code>config.json</code>: a Markdown table of what was published (reads only rows marked as published), the commit history of your repositories (<code>git log</code>), or a feed saved to disk (JSON or RSS). Only items that fall within the week’s date range are included.</p></div>
+    <div class="card"><h3>Files you maintain</h3><p><code>vitorias.md</code> (name — what they did — link), <code>ajudantes.md</code> (name — number of replies), and <code>edicao.md</code> (the one thing, the case table, and what you can ignore). They’re plain text files that open in any editor.</p></div>
+    <div class="card"><h3>Telegram without overflow</h3><p>A Telegram message can contain up to 4,096 characters. The kit counts them the same way Telegram does (an emoji counts as 2) and, if the limit is exceeded, splits the content into <code>telegram.md</code>, <code>telegram-2.md</code>… cutting at the start of a section.</p></div>
+  </div>
+</div></section>
+
+<section id="pre"><div class="wrap">
+  <span class="chip">Prerequisites</span>
+  <h2>Python 3 and git. That’s all.</h2>
+  <p class="sub">The kit uses only what comes with Python (nothing to install with pip). Claude Code or Codex are optional: they help you choose the one thing with the ready-made prompt; you can choose manually.</p>
+  <div class="grid g3">
+    <div class="card"><h3>Ubuntu / Linux</h3><p>Python 3 is already installed. Check and install git if it’s missing.</p><pre><span class="k">python3 --version</span>
+<span class="k">sudo apt install -y git</span></pre></div>
+    <div class="card"><h3>Mac</h3><p>The command below installs Apple’s tools, which include python3 and git.</p><pre><span class="k">xcode-select --install</span>
+<span class="k">python3 --version</span></pre></div>
+    <div class="card"><h3>Windows</h3><p>Install Python from python.org and Git from git-scm.com. In the commands in this guide, replace <code>python3</code> with <code>py</code>.</p><pre><span class="k">py --version</span>
+<span class="k">git --version</span></pre></div>
+  </div>
+</div></section>
+
+<section id="guia"><div class="wrap">
+  <span class="chip">How-to guide · step by step</span>
+  <h2>Your first edition in seven steps</h2>
+  <p class="sub">The commands are the same on Ubuntu and Mac. Run each one in the terminal, from inside the kit folder.</p>
+
+  <div class="step"><div class="b">1</div><div>
+    <h3>Download the kit</h3>
+    <p>Creates the <code>semana-inema</code> folder with everything inside and enters it.</p>
+<pre><span class="k">git clone https://github.com/inematds/semana-inema.git</span>
+<span class="k">cd semana-inema</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">2</div><div>
+    <h3>Check that everything works</h3>
+    <p>Run the kit's tests (they don't use the internet). They should finish with <code>OK</code>.</p>
+<pre><span class="k">python3 -m unittest discover -s tests</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">3</div><div>
+    <h3>Replace INEMA with your community</h3>
+    <p>The kit comes configured for INEMA. Open <code>config.json</code> in a text editor and change the name, link, help text (where to ask for help), and path to your source. In the table's <code>caminho</code>, enter the file where you record what you publish (each published row must include, in the status column, the word defined in <code>so_com</code> — in INEMA, <code>publicad</code>, which covers both published forms — and a date in day/month/year format, such as 07/11/2026). To connect a commit or feed source, change <code>"ativo": false</code> to <code>true</code>.</p>
+<pre>"comunidade": "Minha Comunidade",
+"link": "https://minhacomunidade.com",
+"plantao": { "texto": "Poste a dúvida no grupo com o print do erro.", "link": "https://t.me/meugrupo" },
+"fontes": [ { "tipo": "tabela_md", "caminho": "publicados.md",
+              "coluna_titulo": "Tema", "coluna_data": "Data", "coluna_estado": "Estado" } ]</pre>
+  </div></div>
+
+  <div class="step"><div class="b">4</div><div>
+    <h3>Record wins and helpers during the week</h3>
+    <p>Open <code>vitorias.md</code> and <code>ajudantes.md</code>, delete the examples, and write one line per person. Ask permission before mentioning someone's name. The helper ranking is optional.</p>
+<pre>- Nome do membro — publicou o primeiro site com IA — https://link-do-site
+- Nome do membro — 12 respostas — ajudou 3 pessoas a abrir o terminal</pre>
+  </div></div>
+
+  <div class="step"><div class="b">5</div><div>
+    <h3>Prepare the week's draft</h3>
+    <p>Reads the sources from the last 7 days (up to today) and saves <code>saida/&lt;data&gt;/rascunho.md</code> with everything that came in. For another week, use <code>--ate</code> (last day) and, if you like, <code>--de</code> (first day).</p>
+<pre><span class="k">python3 semana.py rascunho</span>
+<span class="k">python3 semana.py rascunho --de 2026-11-01 --ate 2026-11-08</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">6</div><div>
+    <h3>Choose the one thing</h3>
+    <p>Open Claude Code or Codex inside the kit folder and paste the text from <code>prompts/escolher-a-unica-coisa.md</code>. The agent reads the draft, chooses based on the criterion "1 working result," and writes <code>edicao.md</code>. Without an agent, copy the template at the end of the draft into <code>edicao.md</code> and fill it in by hand. Read the result before continuing: the decision is yours.</p>
+<pre><span class="k">claude</span>    <span class="c"># or: codex — then paste the request from the prompts/escolher-a-unica-coisa.md file</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">7</div><div>
+    <h3>Generate the three formats and publish them yourself</h3>
+    <p>Saves <code>telegram.md</code> (and <code>telegram-2.md</code> if it exceeds the limit), <code>email.html</code>, and <code>pagina.html</code> in <code>saida/&lt;data&gt;/</code>. Paste the Telegram text into the group, open the email in a browser to copy it, and put the page on your website. Use the same <code>--de</code>/<code>--ate</code> as in the draft.</p>
+<pre><span class="k">python3 semana.py gerar</span>
+<span class="k">python3 semana.py gerar --de 2026-11-01 --ate 2026-11-08</span></pre>
+  </div></div>
+</div></section>
+
+<section id="exemplos"><div class="wrap">
+  <span class="chip">Real example</span>
+  <h2>The INEMA week, November 1–8, 2026</h2>
+  <p class="sub">The kit ran on the INEMA production spreadsheet. Of the spreadsheet's 90 rows, 50 were marked as published and dated; 26 fell within the week and became “What arrived.” The one thing chosen was: answer the 6 questions from the AI Business Ladder (Escada do Negócio com IA) and choose a business to get started. The Telegram text was 3,671 characters long and fit in a single message. The example’s wins are INEMA’s own deliverables, marked as examples, and the helper ranking was left empty: the kit doesn’t invent names.</p>
+  <div class="ex">
+    <figure><img src="../assets/exemplo-pagina.jpg" alt="The week’s page on a computer: the one thing, your case and your path, wins" loading="lazy"><figcaption>The week’s page on a computer (1440 px). Complete files at <a href="https://github.com/inematds/semana-inema/tree/main/exemplos/2026-11-08" target="_blank" rel="noopener">exemplos/2026-11-08</a>.</figcaption></figure>
+    <figure><img src="../assets/exemplo-celular.jpg" alt="The same page on a phone, with no horizontal scrolling" loading="lazy"><figcaption>The same page on a phone (390 px): the table becomes a list and nothing overflows to the side.</figcaption></figure>
+  </div>
+</div></section>
+
+<section id="roadmap"><div class="wrap">
+  <span class="chip">What’s included and what isn’t</span>
+  <h2>Made to fit your routine</h2>
+  <p class="sub">The kit handles the tedious work (gathering, counting, formatting). Decisions and sending stay with someone who knows the community.</p>
+  <div class="phase"><div class="tag">Included</div><div class="d"><strong>Three outputs, three sources, tests</strong><span>Telegram split to fit the limit, a simple email, a page that works on mobile; a Markdown table, git log, and local feed; 19 tests that run offline.</span></div></div>
+  <div class="phase"><div class="tag">Not included</div><div class="d"><strong>It doesn’t publish, read conversations, or make things up</strong><span>It doesn’t send messages or email, read the group history, or create wins or helpers: anything not recorded appears as empty.</span></div></div>
+  <div class="phase"><div class="tag">You can</div><div class="d"><strong>Run it every week on the same day</strong><span>Set aside a regular time (for example, Sunday evening): draft, choose, generate, paste. Consistency matters more than perfect editing.</span></div></div>
+</div></section>
+
+<footer>
+  <div class="wrap">
+    <div class="pill">Python 3 (standard library only)</div><div class="pill">Markdown</div><div class="pill">HTML</div>
+    <p style="margin-top:18px">semana-inema · MIT license ·
+      <a href="https://github.com/inematds/semana-inema">github.com/inematds/semana-inema</a> ·
+      <a href="https://inema.club">INEMA.CLUB</a></p>
+  </div>
+</footer>
+<script>
+  (function(){
+    var KEY='semana-inema-theme';
+    var b=document.body, t=document.getElementById('themeToggle');
+    try{ if(localStorage.getItem(KEY)==='light'){ b.classList.add('light'); t.textContent='☀️'; } }catch(e){}
+    t.addEventListener('click',function(){
+      var light=b.classList.toggle('light');
+      t.textContent=light?'☀️':'🌙';
+      try{ localStorage.setItem(KEY, light?'light':'dark'); }catch(e){}
+    });
+  })();
+</script>
+</body>
+</html>

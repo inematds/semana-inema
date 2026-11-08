@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>semana-inema — a semana sem sobrecarga</title>
+<meta name="description" content="Kit aberto que monta o post semanal da sua comunidade: a única coisa a fazer, as vitórias dos membros e o que pode ignorar, em Telegram, e-mail e página.">
+<meta property="og:image" content="https://inematds.github.io/semana-inema/guia/assets/banner.jpg">
+<link rel="alternate" hreflang="pt-BR" href="https://inematds.github.io/semana-inema/guia/">
+<link rel="alternate" hreflang="en" href="https://inematds.github.io/semana-inema/guia/en/">
+<link rel="alternate" hreflang="es" href="https://inematds.github.io/semana-inema/guia/es/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0c0c10; --bg2:#14141b; --card:#16161e; --line:#272730;
+    --txt:#e9e9ee; --mut:#9a9aa6; --amb:#FACC15; --amb2:#f0c070; --sky:#38bdf8; --pro:#cbd5e1;
+    color-scheme:dark;
+  }
+  body.light{
+    --bg:#f6f7f9; --bg2:#eceef2; --card:#ffffff; --line:#e1e3ea;
+    --txt:#1a1a22; --mut:#5b5b68; --amb:#a16207; --amb2:#a16207; --sky:#0369a1; --pro:#b45309;
+    color-scheme:light;
+  }
+  body.light .hero .glow{opacity:.5}
+  body.light pre{background:#0e0e14;color:#d6d6e0}
+  body.light pre .c{color:#8a8a98}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.65 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:Sora,sans-serif;line-height:1.15;margin:0}
+  a{color:var(--amb);text-decoration:none}
+  code,pre{font-family:"JetBrains Mono",monospace}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 22px}
+  .mut{color:var(--mut)} .amb{color:var(--amb)}
+  .chip{display:inline-block;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--amb);font-weight:600;font-family:Sora}
+  nav{position:sticky;top:0;z-index:30;backdrop-filter:blur(12px);background:rgba(12,12,16,.78);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;gap:22px;height:60px}
+  nav .brand{display:flex;align-items:center;gap:8px;font-family:Sora;font-weight:800;letter-spacing:-.02em;color:var(--amb)}
+  nav .brand .emoji{font-size:1.25rem}
+  nav .sep{color:var(--mut);opacity:.45}
+  nav .inema{color:var(--sky);font-weight:600;font-size:.88rem;font-family:Sora}
+  nav .inema:hover{filter:brightness(1.15)}
+  nav .pro{color:var(--pro);font-weight:600;font-size:.88rem;font-family:Sora}
+  nav .pro:hover{filter:brightness(1.15)}
+  nav .clubpro{display:inline-flex;align-items:center;gap:6px}
+  nav .links{margin-left:auto;display:flex;align-items:center;gap:20px;font-size:.92rem}
+  nav .links a.sec{color:var(--mut)} nav .links a.sec:hover{color:var(--txt)}
+  .lang{display:inline-flex;gap:2px;font-family:Sora;font-size:.78rem}
+  .lang a{color:var(--mut);padding:.2em .45em;border-radius:6px} .lang a.on{color:var(--amb);background:rgba(250,204,21,.12)}
+  .tgl{background:var(--bg2);border:1px solid var(--line);color:var(--txt);width:38px;height:38px;border-radius:10px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:1.05rem}
+  .tgl:hover{border-color:var(--amb)}
+  .btn{display:inline-block;background:var(--amb);color:#1a1206;font-weight:600;padding:.6em 1.05em;border-radius:10px;font-family:Sora}
+  .btn.ghost{background:transparent;color:var(--txt);border:1px solid var(--line)}
+  @media(max-width:980px){nav .links a.sec{display:none}}
+  @media(max-width:520px){nav .wrap{gap:8px;padding:8px 14px;height:auto;flex-wrap:wrap} nav .links{gap:8px;margin-left:0;width:100%;justify-content:space-between} nav .btn{padding:.45em .7em;font-size:.82rem} .tgl{width:34px;height:34px}}
+  .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+  .hero .glow{position:absolute;inset:-40% -20% auto auto;width:70%;height:600px;background:radial-gradient(closest-side,rgba(250,204,21,.22),transparent 70%);pointer-events:none}
+  .hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding:74px 22px}
+  .hero h1{font-size:clamp(2.2rem,5vw,3.5rem);font-weight:800;letter-spacing:-.025em}
+  .hero p.lead{font-size:1.18rem;color:var(--mut);margin:1.1em 0 1.6em;max-width:34ch}
+  .hero .cta{display:flex;gap:12px;flex-wrap:wrap}
+  .hero figure{margin:0;border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 80px -30px #000}
+  .hero figure img{width:100%;height:auto;display:block}
+  .resumo{padding:38px 0 34px;border-bottom:1px solid var(--line)}
+  .resumo p{font-size:1.12rem;line-height:1.7;max-width:74ch;margin:.55em 0 0}
+  @media(max-width:780px){.hero .wrap{grid-template-columns:1fr;padding:48px 22px}}
+  section{padding:62px 0;border-bottom:1px solid var(--line)}
+  section h2{font-size:clamp(1.5rem,3.4vw,2.1rem);font-weight:800;letter-spacing:-.02em}
+  section .sub{color:var(--mut);margin:.6em 0 2em;max-width:62ch}
+  .grid{display:grid;gap:16px}
+  .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)} .g2{grid-template-columns:repeat(2,1fr)}
+  @media(max-width:820px){.g3,.g4{grid-template-columns:1fr 1fr}}
+  @media(max-width:540px){.g2,.g3,.g4{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .card h3{font-size:1.05rem;margin-bottom:.4em}
+  .card p{color:var(--mut);font-size:.92rem;margin:0}
+  .card pre{margin:.8em 0 0}
+  .num{display:inline-flex;width:30px;height:30px;align-items:center;justify-content:center;border-radius:8px;background:rgba(250,204,21,.14);color:var(--amb);font-family:Sora;font-weight:800;font-size:.9rem;margin-bottom:.7em}
+  .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+  .flow span{background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:.45em .9em;font-size:.85rem;font-family:Sora;font-weight:600}
+  .flow .arr{color:var(--amb);border:none;background:none;padding:0 .1em}
+  pre{background:#0a0a0e;border:1px solid var(--line);border-radius:12px;padding:16px 18px;overflow:auto;font-size:.86rem;line-height:1.6;color:#d6d6e0}
+  pre .c{color:#6f6f7c} pre .k{color:var(--amb2)} pre .s{color:#9ece6a}
+  .step{display:grid;grid-template-columns:46px minmax(0,1fr);gap:16px;margin-bottom:26px}
+  .step>div,.card{min-width:0}
+  p code,li code,td code{overflow-wrap:anywhere}
+  .step .b{width:46px;height:46px;border-radius:12px;background:var(--amb);color:#1a1206;font-family:Sora;font-weight:800;font-size:1.25rem;display:flex;align-items:center;justify-content:center}
+  .step h3{font-size:1.12rem;margin-bottom:.3em}
+  .step p{color:var(--mut);margin:.2em 0 .7em}
+  .ex{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+  @media(max-width:680px){.ex{grid-template-columns:1fr}}
+  .ex figure{margin:0;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+  .ex figure img{width:100%;height:auto;display:block}
+  .ex figcaption{padding:12px 14px;font-size:.88rem;color:var(--mut);background:var(--card)}
+  .phase{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
+  .phase:last-child{border:none}
+  .phase .tag{flex:0 0 92px;font-family:Sora;font-weight:800;color:var(--amb)}
+  .phase .d strong{display:block;margin-bottom:.2em}
+  .phase .d span{color:var(--mut);font-size:.92rem}
+  footer{padding:46px 0;text-align:center;color:var(--mut);font-size:.9rem}
+  .pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:.3em .8em;font-size:.78rem;color:var(--mut);margin:0 4px}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <a class="brand" href="#top"><span class="emoji">🗓️</span> semana-inema</a>
+  <span class="sep">|</span>
+  <span class="clubpro">
+    <a class="inema" href="https://inema.club" target="_blank" rel="noopener">INEMA.CLUB</a>
+    <span class="sep">-</span>
+    <a class="pro" href="https://inema.pro" target="_blank" rel="noopener">PRO</a>
+  </span>
+  <div class="links">
+    <a class="sec" href="#oque">O método</a>
+    <a class="sec" href="#fluxo">Como funciona</a>
+    <a class="sec" href="#guia">Guia de uso</a>
+    <a class="sec" href="#exemplos">Exemplo</a>
+    <span class="lang"><a class="on" href="./">PT</a><a href="en/">EN</a><a href="es/">ES</a></span>
+    <button class="tgl" id="themeToggle" aria-label="Alternar tema" title="Alternar tema">🌙</button>
+    <a class="btn" href="https://github.com/inematds/semana-inema" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</div></nav>
+
+<header class="hero" id="top">
+  <div class="glow"></div>
+  <div class="wrap">
+    <div>
+      <span class="chip">Kit aberto · post semanal da comunidade</span>
+      <h1>Sua comunidade não precisa de mais conteúdo. Precisa saber <span class="amb">o que fazer</span>.</h1>
+      <p class="lead">Um post por semana com a única coisa a fazer, as vitórias dos membros e o que pode ignorar. O kit monta o texto do Telegram, o e-mail e a página. Você escolhe e cola.</p>
+      <div class="cta">
+        <a class="btn" href="#guia">Começar o guia</a>
+        <a class="btn ghost" href="https://github.com/inematds/semana-inema" target="_blank" rel="noopener">Ver no GitHub</a>
+      </div>
+    </div>
+    <figure><img src="assets/banner.jpg" alt="Banner: semana sem sobrecarga — sua comunidade não precisa de mais conteúdo, precisa saber o que fazer"></figure>
+  </div>
+</header>
+
+<section id="resumo" class="resumo"><div class="wrap">
+  <span class="chip">Em resumo</span>
+  <p>O semana-inema é um kit gratuito para quem cuida de uma comunidade (grupo de Telegram, WhatsApp, turma, lista de e-mail). Toda semana ele lê o que saiu de novo nas suas fontes e monta uma edição curta com sete partes: a única coisa a fazer, o caminho para cada caso, as vitórias dos membros, o que chegou, o que pode ignorar, onde pedir ajuda e quem mais ajudou. Sai em três formatos: mensagem de Telegram, e-mail e página. Precisa só de Python no computador; nada é publicado sozinho.</p>
+</div></section>
+
+<section id="oque"><div class="wrap">
+  <span class="chip">O método</span>
+  <h2>A semana sem sobrecarga, em sete partes</h2>
+  <p class="sub">Sai ferramenta nova todo dia. Quem tenta acompanhar tudo se afoga e não termina nada. A edição semanal faz o contrário: escolhe por você e dá licença para ignorar o resto.</p>
+  <figure style="margin:0 0 26px;border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 80px -30px #000"><img src="assets/banner-grade.jpg" alt="As seis partes fixas da edição: a única coisa, seu caso e seu caminho, vitórias, o que chegou, pode ignorar e travou" loading="lazy" style="width:100%;display:block"></figure>
+  <div class="grid g3">
+    <div class="card"><div class="num">1</div><h3>A única coisa</h3><p>Uma tarefa só, que termina com um resultado funcionando na mão da pessoa: um teste respondido, um agente rodando, um backup feito. "Assisti o vídeo" não conta. Uma coisa feita vale mais que dez abertas.</p></div>
+    <div class="card"><div class="num">2</div><h3>Seu caso → seu caminho</h3><p>Uma tabela curta: "usa ChatGPT no dia a dia → veja isto", "atende clientes no WhatsApp → veja aquilo". Cada pessoa acha a sua linha sem ler a lista inteira.</p></div>
+    <div class="card"><div class="num">3</div><h3>Vitórias da comunidade</h3><p>Nome, o que fez funcionar e o link. Ver alguém parecido com você chegar lá convence mais que qualquer promessa. Peça licença antes de citar o nome.</p></div>
+    <div class="card"><div class="num">4</div><h3>O que chegou</h3><p>A lista do que saiu na semana, lida das suas fontes, com data e link. Fica no fim de propósito: é consulta, não tarefa.</p></div>
+    <div class="card"><div class="num">5</div><h3>Pode ignorar</h3><p>Duas a quatro novidades que podem esperar, com o motivo. Isso tira a culpa de não ter visto tudo, que é o que mais faz gente desistir.</p></div>
+    <div class="card"><div class="num">6 · 7</div><h3>Travou? · Quem mais ajudou</h3><p>Onde e como pedir ajuda (com o print do erro e o comando que rodou) e um ranking manual de quem respondeu dúvidas. Quem ajuda é visto, e o grupo aprende a se ajudar.</p></div>
+  </div>
+  <div class="ex" style="margin-top:26px">
+    <figure><img src="assets/metodo.jpg" alt="Pessoa tranquila tomando café perto da janela" loading="lazy"><figcaption>A meta não é saber tudo o que saiu. É terminar a semana com uma coisa funcionando.</figcaption></figure>
+    <div class="card"><h3>Por que funciona</h3><p style="margin-bottom:.8em">Quem chega numa comunidade de IA vê dezenas de novidades por semana. Sem alguém dizendo "comece por aqui", a pessoa salva tudo para depois e não faz nada.</p><p style="margin-bottom:.8em">A edição troca "mais conteúdo" por "uma decisão": o moderador (ou um agente, com o prompt pronto do kit) escolhe a única coisa com um critério fixo, mostra quem já conseguiu e diz o que pode ficar de lado.</p><p>O kit não decide sozinho e não publica nada. Ele junta o material e monta os três formatos; a escolha e o envio continuam com você.</p></div>
+  </div>
+</div></section>
+
+<section id="fluxo"><div class="wrap">
+  <span class="chip">Como funciona</span>
+  <h2>Das fontes da semana ao post pronto</h2>
+  <p class="sub">Dois comandos e uma escolha no meio. Tudo roda no seu computador, sem internet e sem chave de nada.</p>
+  <div class="flow">
+    <span>Suas fontes</span><span class="arr">→</span>
+    <span>semana.py rascunho</span><span class="arr">→</span>
+    <span>rascunho.md</span><span class="arr">→</span>
+    <span>você ou o agente escolhe</span><span class="arr">→</span>
+    <span>edicao.md</span><span class="arr">→</span>
+    <span>semana.py gerar</span><span class="arr">→</span>
+    <span>telegram.md · email.html · pagina.html</span><span class="arr">→</span>
+    <span>você publica</span>
+  </div>
+  <div class="grid g3" style="margin-top:26px">
+    <div class="card"><h3>Fontes de "O que chegou"</h3><p>Três tipos, ligados no <code>config.json</code>: uma tabela em Markdown com o que foi publicado (lê só as linhas marcadas como publicadas), o histórico de commits de repositórios seus (<code>git log</code>) ou um feed salvo no disco (JSON ou RSS). Entra só o que caiu na janela da semana.</p></div>
+    <div class="card"><h3>Arquivos que você mantém</h3><p><code>vitorias.md</code> (nome — o que fez — link), <code>ajudantes.md</code> (nome — número de respostas) e <code>edicao.md</code> (a única coisa, a tabela de casos e o pode ignorar). São textos simples, que qualquer editor abre.</p></div>
+    <div class="card"><h3>Telegram sem estourar</h3><p>Uma mensagem do Telegram aceita até 4.096 caracteres. O kit conta do mesmo jeito que o Telegram (emoji vale 2) e, se passar, divide em <code>telegram.md</code>, <code>telegram-2.md</code>… cortando no começo de uma seção.</p></div>
+  </div>
+</div></section>
+
+<section id="pre"><div class="wrap">
+  <span class="chip">Pré-requisitos</span>
+  <h2>Python 3 e o git. Só isso.</h2>
+  <p class="sub">O kit usa apenas o que já vem com o Python (nada para instalar com pip). O Claude Code ou o Codex são opcionais: servem para escolher a única coisa com o prompt pronto; dá para escolher à mão.</p>
+  <div class="grid g3">
+    <div class="card"><h3>Ubuntu / Linux</h3><p>Python 3 já vem instalado. Confira e instale o git, se faltar.</p><pre><span class="k">python3 --version</span>
+<span class="k">sudo apt install -y git</span></pre></div>
+    <div class="card"><h3>Mac</h3><p>O comando abaixo instala as ferramentas da Apple, que trazem o python3 e o git.</p><pre><span class="k">xcode-select --install</span>
+<span class="k">python3 --version</span></pre></div>
+    <div class="card"><h3>Windows</h3><p>Instale o Python em python.org e o Git em git-scm.com. Nos comandos deste guia, troque <code>python3</code> por <code>py</code>.</p><pre><span class="k">py --version</span>
+<span class="k">git --version</span></pre></div>
+  </div>
+</div></section>
+
+<section id="guia"><div class="wrap">
+  <span class="chip">Guia de uso · passo a passo</span>
+  <h2>Sua primeira edição em sete passos</h2>
+  <p class="sub">Os comandos são os mesmos no Ubuntu e no Mac. Rode cada um no terminal, dentro da pasta do kit.</p>
+
+  <div class="step"><div class="b">1</div><div>
+    <h3>Baixe o kit</h3>
+    <p>Cria a pasta <code>semana-inema</code> com tudo dentro e entra nela.</p>
+<pre><span class="k">git clone https://github.com/inematds/semana-inema.git</span>
+<span class="k">cd semana-inema</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">2</div><div>
+    <h3>Confira que tudo funciona</h3>
+    <p>Roda os testes do kit (não usam internet). Tem que terminar com <code>OK</code>.</p>
+<pre><span class="k">python3 -m unittest discover -s tests</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">3</div><div>
+    <h3>Troque o INEMA pela sua comunidade</h3>
+    <p>O kit vem configurado para o INEMA. Abra o <code>config.json</code> num editor de texto e troque o nome, o link, o texto do plantão e o caminho da sua fonte. No <code>caminho</code> da tabela, ponha o arquivo onde você anota o que publica (cada linha publicada precisa trazer, na coluna de estado, a palavra definida em <code>so_com</code> — no INEMA, <code>publicad</code>, que vale para publicado e publicada — e uma data no formato dia/mês/ano, como 07/11/2026). Para ligar uma fonte de commits ou de feed, mude <code>"ativo": false</code> para <code>true</code>.</p>
+<pre>"comunidade": "Minha Comunidade",
+"link": "https://minhacomunidade.com",
+"plantao": { "texto": "Poste a dúvida no grupo com o print do erro.", "link": "https://t.me/meugrupo" },
+"fontes": [ { "tipo": "tabela_md", "caminho": "publicados.md",
+              "coluna_titulo": "Tema", "coluna_data": "Data", "coluna_estado": "Estado" } ]</pre>
+  </div></div>
+
+  <div class="step"><div class="b">4</div><div>
+    <h3>Anote vitórias e ajudantes durante a semana</h3>
+    <p>Abra <code>vitorias.md</code> e <code>ajudantes.md</code>, apague os exemplos e escreva uma linha por pessoa. Peça licença antes de citar o nome. O ranking de ajudantes é opcional.</p>
+<pre>- Nome do membro — publicou o primeiro site com IA — https://link-do-site
+- Nome do membro — 12 respostas — ajudou 3 pessoas a abrir o terminal</pre>
+  </div></div>
+
+  <div class="step"><div class="b">5</div><div>
+    <h3>Monte o rascunho da semana</h3>
+    <p>Lê as fontes dos últimos 7 dias (até hoje) e grava <code>saida/&lt;data&gt;/rascunho.md</code> com tudo o que chegou. Para outra semana, use <code>--ate</code> (último dia) e, se quiser, <code>--de</code> (primeiro dia).</p>
+<pre><span class="k">python3 semana.py rascunho</span>
+<span class="k">python3 semana.py rascunho --de 2026-11-01 --ate 2026-11-08</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">6</div><div>
+    <h3>Escolha a única coisa</h3>
+    <p>Abra o Claude Code ou o Codex dentro da pasta do kit e cole o texto de <code>prompts/escolher-a-unica-coisa.md</code>. O agente lê o rascunho, escolhe com o critério "1 resultado funcionando" e escreve o <code>edicao.md</code>. Sem agente, copie o modelo do fim do rascunho para <code>edicao.md</code> e preencha à mão. Leia o resultado antes de seguir: a decisão é sua.</p>
+<pre><span class="k">claude</span>    <span class="c"># ou: codex — depois cole o pedido do arquivo prompts/escolher-a-unica-coisa.md</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">7</div><div>
+    <h3>Gere os três formatos e publique você mesmo</h3>
+    <p>Grava <code>telegram.md</code> (e <code>telegram-2.md</code> se passar do limite), <code>email.html</code> e <code>pagina.html</code> em <code>saida/&lt;data&gt;/</code>. Cole o texto do Telegram no grupo, abra o e-mail no navegador para copiar, e ponha a página no seu site. Use o mesmo <code>--de</code>/<code>--ate</code> do rascunho.</p>
+<pre><span class="k">python3 semana.py gerar</span>
+<span class="k">python3 semana.py gerar --de 2026-11-01 --ate 2026-11-08</span></pre>
+  </div></div>
+</div></section>
+
+<section id="exemplos"><div class="wrap">
+  <span class="chip">Exemplo real</span>
+  <h2>A semana do INEMA, de 01 a 08/11/2026</h2>
+  <p class="sub">O kit rodou na tabela de produções do INEMA. Das 90 linhas da tabela, 50 estavam marcadas como publicadas e com data; 26 caíram na semana e viraram "O que chegou". A única coisa escolhida foi: responder as 6 perguntas da Escada do Negócio com IA e escolher um negócio para começar. O texto do Telegram deu 3.671 caracteres e coube numa mensagem só. As vitórias do exemplo são entregas do próprio INEMA, marcadas como exemplo, e o ranking de ajudantes ficou vazio: o kit não inventa nomes.</p>
+  <div class="ex">
+    <figure><img src="assets/exemplo-pagina.jpg" alt="Página da semana no computador: a única coisa, seu caso e seu caminho, vitórias" loading="lazy"><figcaption>A página da semana no computador (1440 px). Arquivos completos em <a href="https://github.com/inematds/semana-inema/tree/main/exemplos/2026-11-08" target="_blank" rel="noopener">exemplos/2026-11-08</a>.</figcaption></figure>
+    <figure><img src="assets/exemplo-celular.jpg" alt="A mesma página no celular, sem rolagem lateral" loading="lazy"><figcaption>A mesma página no celular (390 px): a tabela vira lista e nada vaza para o lado.</figcaption></figure>
+  </div>
+</div></section>
+
+<section id="roadmap"><div class="wrap">
+  <span class="chip">O que tem e o que não tem</span>
+  <h2>Feito para caber na sua rotina</h2>
+  <p class="sub">O kit faz o trabalho chato (juntar, contar, formatar). As decisões e o envio ficam com quem conhece a comunidade.</p>
+  <div class="phase"><div class="tag">Tem</div><div class="d"><strong>Três saídas, três fontes, testes</strong><span>Telegram dividido no limite, e-mail simples, página que funciona no celular; tabela Markdown, git log e feed local; 19 testes que rodam sem internet.</span></div></div>
+  <div class="phase"><div class="tag">Não faz</div><div class="d"><strong>Não publica, não lê conversas, não inventa</strong><span>Não envia mensagem nem e-mail, não lê o histórico do grupo e não cria vitória ou ajudante: o que não estiver anotado aparece como vazio.</span></div></div>
+  <div class="phase"><div class="tag">Você pode</div><div class="d"><strong>Rodar toda semana no mesmo dia</strong><span>Reserve um horário fixo (por exemplo, domingo à noite): rascunho, escolha, gerar, colar. A constância vale mais que a edição perfeita.</span></div></div>
+</div></section>
+
+<footer>
+  <div class="wrap">
+    <div class="pill">Python 3 (só biblioteca padrão)</div><div class="pill">Markdown</div><div class="pill">HTML</div>
+    <p style="margin-top:18px">semana-inema · licença MIT ·
+      <a href="https://github.com/inematds/semana-inema">github.com/inematds/semana-inema</a> ·
+      <a href="https://inema.club">INEMA.CLUB</a></p>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var KEY='semana-inema-theme';
+    var b=document.body, t=document.getElementById('themeToggle');
+    try{ if(localStorage.getItem(KEY)==='light'){ b.classList.add('light'); t.textContent='☀️'; } }catch(e){}
+    t.addEventListener('click',function(){
+      var light=b.classList.toggle('light');
+      t.textContent=light?'☀️':'🌙';
+      try{ localStorage.setItem(KEY, light?'light':'dark'); }catch(e){}
+    });
+  })();
+</script>
+</body>
+</html>
