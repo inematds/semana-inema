@@ -21,7 +21,7 @@ Quem faz: 🧠 o moderador (você) · ⚙️ o script · 🤖 um agente (Claude 
 | # | Passo | Comando / arquivo | Quem |
 |---|---|---|---|
 | 1 | Ver o exemplo pronto (lê a cópia da semana do INEMA que vem no kit) | `python3 semana.py gerar --config config.exemplo.json --de 2026-11-01 --ate 2026-11-08` | ⚙️ |
-| 2 | Configurar uma vez: nome, link, plantão (o texto da seção "Travou?") e a sua tabela de publicados | `config.json`, `publicados.md` | 🧠 |
+| 2 | Configurar uma vez: nome, link, plantão (o texto da seção "Travou?") e a sua tabela de publicados | `cp config.modelo.json config.json`, depois `config.json` e `publicados.md` | 🧠 |
 | 3 | Durante a semana, anotar vitórias e quem ajudou (com licença das pessoas) | `vitorias.md`, `ajudantes.md` | 🧠 |
 | 4 | Juntar o que chegou na semana e montar o rascunho | `python3 semana.py rascunho` → `saida/<data>/rascunho.md` | ⚙️ |
 | 5 | Escolher a única coisa, a tabela "seu caso → seu caminho" e o "pode ignorar" | colar `prompts/escolher-a-unica-coisa.md` → escreve `edicao.md` | 🤖 (ou 🧠 à mão) |
@@ -36,11 +36,11 @@ Para uma semana que não termina hoje, passe as datas nos passos 4 e 7: `--ate A
 ```bash
 git clone https://github.com/inematds/semana-inema.git
 cd semana-inema
-python3 -m unittest discover -s tests      # tem que terminar com OK
-python3 semana.py gerar --config config.exemplo.json --de 2026-11-01 --ate 2026-11-08   # o exemplo pronto
+python3 -m unittest discover -s tests
+python3 semana.py gerar --config config.exemplo.json --de 2026-11-01 --ate 2026-11-08
 ```
 
-Depois, para a sua comunidade: crie o `publicados.md`, ajuste o `config.json` (`"caminho": "publicados.md"`, `"coluna_data": "Data"`, apague `padrao_id_youtube`), apague os exemplos de `vitorias.md`/`ajudantes.md` e rode:
+Depois, para a sua comunidade: crie o `publicados.md`, copie o modelo genérico por cima do config (`cp config.modelo.json config.json`; no Windows, `copy`), troque nele o nome, o link e o plantão, apague os exemplos de `vitorias.md`/`ajudantes.md` e rode:
 
 ```bash
 python3 semana.py rascunho
@@ -105,6 +105,7 @@ python3 semana.py gerar    --de 2026-11-01 --ate 2026-11-08 --saida exemplos
 | `semana.py` | o script (rascunho e gerar) |
 | `config.json` | comunidade, link, plantão, fontes (vem com o INEMA, que lê a tabela interna de produções) |
 | `config.exemplo.json` | roda o exemplo em qualquer clone (lê `exemplos/2026-11-08/publicados.md`) |
+| `config.modelo.json` | modelo genérico para a sua comunidade (lê `publicados.md`); copie por cima do `config.json` |
 | `vitorias.md`, `ajudantes.md` | o que o moderador anota na semana |
 | `edicao.md` | a escolha da semana (única coisa, seu caso, pode ignorar); a que vem no kit é o exemplo do INEMA |
 | `prompts/escolher-a-unica-coisa.md` | pedido pronto para o Claude Code ou o Codex |

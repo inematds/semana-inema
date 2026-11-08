@@ -179,7 +179,7 @@
     <span>você publica</span>
   </div>
   <div class="grid g3" style="margin-top:26px">
-    <div class="card"><h3>Fontes de "O que chegou"</h3><p>Três tipos, ligados no <code>config.json</code>: uma tabela em Markdown com o que foi publicado (lê só as linhas marcadas como publicadas), o histórico de commits de repositórios seus (<code>git log</code>) ou um feed salvo no disco (JSON ou RSS). Entra só o que caiu na janela da semana.</p></div>
+    <div class="card"><h3>Fontes de "O que chegou"</h3><p>Três tipos, ligados no <code>config.json</code>: uma tabela em Markdown com o que foi publicado (lê só as linhas marcadas como publicadas), o histórico de commits de repositórios seus (<code>git log</code>) ou um feed salvo no disco (JSON ou RSS). Entra só o que caiu na janela da semana. Quem só tem a tabela pode deixar as outras duas desligadas: o <code>git log</code> é a lista de mudanças de um projeto guardado no git, e o feed é a lista de novidades que sites e blogs publicam (RSS).</p></div>
     <div class="card"><h3>Arquivos que você mantém</h3><p><code>vitorias.md</code> (nome — o que fez — link), <code>ajudantes.md</code> (nome — número de respostas) e <code>edicao.md</code> (a única coisa, a tabela de casos e o pode ignorar). São textos simples, que qualquer editor abre.</p></div>
     <div class="card"><h3>Telegram sem estourar</h3><p>Uma mensagem do Telegram aceita até 4.096 caracteres. O kit conta do mesmo jeito que o Telegram (emoji vale 2) e, se passar, divide em <code>telegram.md</code>, <code>telegram-2.md</code>… cortando no começo de uma seção.</p></div>
   </div>
@@ -219,7 +219,7 @@
 
   <div class="step"><div class="b">3</div><div>
     <h3>Veja o exemplo pronto funcionando</h3>
-    <p>O <code>config.exemplo.json</code> lê uma cópia da semana do INEMA que vem no kit (<code>exemplos/2026-11-08/publicados.md</code>). Assim você vê as três saídas antes de mexer em nada. Os arquivos saem em <code>saida/2026-11-08/</code>.</p>
+    <p>O <code>config.exemplo.json</code> lê uma cópia da semana do INEMA que vem no kit (<code>exemplos/2026-11-08/publicados.md</code>). Assim você vê as três saídas antes de mexer em nada. Os arquivos saem em <code>saida-exemplo/2026-11-08/</code>, separados da sua edição.</p>
 <pre><span class="k">python3 semana.py gerar --config config.exemplo.json --de 2026-11-01 --ate 2026-11-08</span></pre>
   </div></div>
 
@@ -235,12 +235,12 @@
 
   <div class="step"><div class="b">5</div><div>
     <h3>Troque o INEMA pela sua comunidade</h3>
-    <p>O kit vem configurado para o INEMA. Abra o <code>config.json</code> num editor de texto e troque o nome, o link e o plantão (o texto que aparece na seção "Travou?"). Na primeira fonte, ponha <code>"caminho": "publicados.md"</code>, <code>"coluna_data": "Data"</code> (o nome da coluna de data da sua tabela) e apague a linha <code>padrao_id_youtube</code>, que só serve para a tabela do INEMA. Deixe <code>"so_com": "publicad"</code>: é a palavra que marca a linha como publicada e vale para publicado e publicada. As outras duas fontes (commits e feed) ficam desligadas com <code>"ativo": false</code>.</p>
+    <p>O <code>config.json</code> que vem no kit é o do INEMA. Troque pelo modelo genérico, que já lê o seu <code>publicados.md</code> (no Windows, use <code>copy</code> no lugar de <code>cp</code>):</p>
+<pre><span class="k">cp config.modelo.json config.json</span></pre>
+    <p>Depois abra o <code>config.json</code> num editor de texto e mude só estas três linhas: o nome da comunidade, o link e o plantão (o texto que aparece na seção "Travou?"). Mantenha as aspas e as vírgulas como estão; se algo quebrar, o kit diz em que linha está o erro.</p>
 <pre>"comunidade": "Minha Comunidade",
 "link": "https://minhacomunidade.com",
-"plantao": { "texto": "Poste a dúvida no grupo com o print do erro.", "link": "https://t.me/meugrupo" },
-"fontes": [ { "tipo": "tabela_md", "nome": "Publicados", "caminho": "publicados.md",
-              "coluna_titulo": "Tema", "coluna_data": "Data", "coluna_estado": "Estado", "so_com": "publicad" } ]</pre>
+"plantao": {"texto": "Poste a dúvida no grupo com 3 coisas: o print do erro, o comando que você rodou e o que esperava ver.", "link": "https://t.me/meugrupo"},</pre>
   </div></div>
 
   <div class="step"><div class="b">6</div><div>
@@ -271,7 +271,7 @@ link: https://exemplo.com/aula
 
 ## Pode ignorar
 - Notícia X — curiosidade; não muda o que você faz nesta semana.</pre>
-    <p>A linha <code>semana:</code> tem que ser o último dia da semana que você vai gerar. Se ficar a de uma semana antiga, o kit recusa, para não publicar a edição velha por engano.</p>
+    <p>Troque <code>2026-11-15</code> pelo último dia da semana que você vai gerar (o mesmo <code>--ate</code>; sem <code>--ate</code>, a data de hoje). Se a linha <code>semana:</code> ficar com outra data, o kit para com a mensagem "O edicao.md é da semana …", para não publicar uma edição velha por engano: corrija a data ou, se for de propósito, use <code>--forcar</code>. São opcionais: <code>## Abertura</code> (a primeira frase do post), <code>tempo:</code> (quanto leva) e <code>## Travou?</code> (vazio usa o plantão do <code>config.json</code>).</p>
   </div></div>
 
   <div class="step"><div class="b">8</div><div>
@@ -295,7 +295,7 @@ link: https://exemplo.com/aula
   <span class="chip">O que tem e o que não tem</span>
   <h2>Feito para caber na sua rotina</h2>
   <p class="sub">O kit faz o trabalho chato (juntar, contar, formatar). As decisões e o envio ficam com quem conhece a comunidade.</p>
-  <div class="phase"><div class="tag">Tem</div><div class="d"><strong>Três saídas, três fontes, testes</strong><span>Telegram dividido no limite, e-mail simples, página que funciona no celular; tabela Markdown, git log e feed local; 21 testes que rodam sem internet.</span></div></div>
+  <div class="phase"><div class="tag">Tem</div><div class="d"><strong>Três saídas, três fontes, testes</strong><span>Telegram dividido no limite, e-mail simples, página que funciona no celular; tabela Markdown, git log e feed local; 22 testes que rodam sem internet.</span></div></div>
   <div class="phase"><div class="tag">Não faz</div><div class="d"><strong>Não publica, não lê conversas, não inventa</strong><span>Não envia mensagem nem e-mail, não lê o histórico do grupo e não cria vitória ou ajudante: o que não estiver anotado aparece como vazio.</span></div></div>
   <div class="phase"><div class="tag">Você pode</div><div class="d"><strong>Rodar toda semana no mesmo dia</strong><span>Reserve um horário fixo (por exemplo, domingo à noite): rascunho, escolha, gerar, colar. A constância vale mais que a edição perfeita.</span></div></div>
 </div></section>

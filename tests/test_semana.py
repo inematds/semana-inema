@@ -75,6 +75,12 @@ class TestTabela(unittest.TestCase):
         self.assertNotIn("Agentes que se autoaprimoram", self.por)
         self.assertNotIn("Robô de IA para criança", self.por)
 
+    def test_colunas_com_varios_nomes(self):
+        tab = "| Topic | Date | Status |\n|---|---|---|\n| Live | 07/11/2026 | publicado 07/11/2026 — https://e.x/l |\n"
+        itens, cont = semana.ler_tabela_md(tab, {"coluna_titulo": ["Tema", "Topic"], "coluna_data": ["Data", "Date"],
+                                                 "coluna_estado": ["Estado", "Status"], "so_com": "publicad"})
+        self.assertEqual([(x["titulo"], x["data"], x["link"]) for x in itens], [("Live", D(2026, 11, 7), "https://e.x/l")])
+
     def test_links(self):
         self.assertEqual(self.por["MovieFlow — filme de IA de graça"]["link"], "https://www.youtube.com/watch?v=0zyz-H-1qXQ")
         self.assertEqual(self.por["claude-diretor — mascote INEMA animado"]["link"], "https://www.youtube.com/watch?v=dc1A1sZbREc")

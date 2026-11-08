@@ -179,7 +179,7 @@
     <span>you publish</span>
   </div>
   <div class="grid g3" style="margin-top:26px">
-    <div class="card"><h3>Sources for "What arrived"</h3><p>Three types, configured in <code>config.json</code>: a Markdown table of what was published (reads only rows marked as publicad), the commit history of your repositories (<code>git log</code>), or a feed saved to disk (JSON or RSS). Only items within the weekly window are included.</p></div>
+    <div class="card"><h3>Sources for “What’s new”</h3><p>Three types, configured in <code>config.json</code>: a Markdown table of what was published (reads only rows marked as published), the commit history of your repositories (<code>git log</code>), or a feed saved on disk (JSON or RSS). Only items that fall within the week’s window are included. If you only have the table, you can leave the other two turned off: <code>git log</code> is the list of changes in a project tracked in git, and a feed is a list of updates that websites and blogs publish (RSS).</p></div>
     <div class="card"><h3>Files you maintain</h3><p><code>vitorias.md</code> (name — what they did — link), <code>ajudantes.md</code> (name — number of replies), and <code>edicao.md</code> (the one thing, the case table, and what you can ignore). These are simple text files that any editor can open.</p></div>
     <div class="card"><h3>Telegram without overflowing</h3><p>A Telegram message accepts up to 4,096 characters. The kit counts characters the same way Telegram does (an emoji counts as 2) and, if the limit is exceeded, splits the post into <code>telegram.md</code>, <code>telegram-2.md</code>… cutting at the start of a section.</p></div>
   </div>
@@ -218,8 +218,8 @@
   </div></div>
 
   <div class="step"><div class="b">3</div><div>
-    <h3>See the ready-made example in action</h3>
-    <p><code>config.exemplo.json</code> reads a copy of INEMA's week included in the kit (<code>exemplos/2026-11-08/publicados.md</code>). This lets you see all three outputs before changing anything. The files are saved in <code>saida/2026-11-08/</code>.</p>
+    <h3>See the finished example in action</h3>
+    <p><code>config.exemplo.json</code> reads a copy of an INEMA week included in the kit (<code>exemplos/2026-11-08/publicados.md</code>). This lets you see all three outputs before changing anything. The files go in <code>saida-exemplo/2026-11-08/</code>, separate from your edition.</p>
 <pre><span class="k">python3 semana.py gerar --config config.exemplo.json --de 2026-11-01 --ate 2026-11-08</span></pre>
   </div></div>
 
@@ -235,12 +235,12 @@
 
   <div class="step"><div class="b">5</div><div>
     <h3>Replace INEMA with your community</h3>
-    <p>The kit is configured for INEMA. Open <code>config.json</code> in a text editor and change the name, link, and help text (the text that appears in the "Got stuck?" section). In the first source, set <code>"caminho": "publicados.md"</code>, <code>"coluna_data": "Data"</code> (the date column name in your table), and delete the <code>padrao_id_youtube</code> line, which is only used for the INEMA table. Leave <code>"so_com": "publicad"</code>: it's the word that marks a line as published and works for both "published" and "published" (feminine form). The other two sources (commits and feed) stay disabled with <code>"ativo": false</code>.</p>
+    <p>The <code>config.json</code> included in the kit is set up for INEMA. Switch to the generic template, which already reads your <code>publicados.md</code> (on Windows, use <code>copy</code> instead of <code>cp</code>):</p>
+<pre><span class="k">cp config.modelo.json config.json</span></pre>
+    <p>Then open <code>config.json</code> in a text editor and change only these three lines: the community name, the link, and the help text (the text shown in the "Need help?" section). Keep the quotation marks and commas as they are; if something breaks, the kit tells you which line contains the error.</p>
 <pre>"comunidade": "My Community",
 "link": "https://minhacomunidade.com",
-"plantao": { "texto": "Post your question in the group with a screenshot of the error.", "link": "https://t.me/meugrupo" },
-"fontes": [ { "tipo": "tabela_md", "nome": "Published", "caminho": "publicados.md",
-              "coluna_titulo": "Topic", "coluna_data": "Date", "coluna_estado": "Status", "so_com": "publicad" } ]</pre>
+"plantao": {"texto": "Post the question in the group with 3 things: a screenshot of the error, the command you ran, and what you expected to see.", "link": "https://t.me/meugrupo"},</pre>
   </div></div>
 
   <div class="step"><div class="b">6</div><div>
@@ -271,7 +271,7 @@ link: https://exemplo.com/aula
 
 ## You can ignore
 - News X — interesting, but it doesn't change what you do this week.</pre>
-    <p>The <code>semana:</code> line must contain the last day of the week you're generating. If it still has an old week's date, the kit refuses to proceed so you don't publish an outdated edition by mistake.</p>
+    <p>Replace <code>2026-11-15</code> with the last day of the week you’re going to generate (the same as <code>--ate</code>; without <code>--ate</code>, today’s date). If the <code>semana:</code> line has a different date, the kit stops with the message "O edicao.md é da semana …" (The edicao.md is from the week of …) to avoid accidentally publishing an old edition: correct the date or, if that’s intentional, use <code>--forcar</code>. These are optional: <code>## Abertura</code> (the first sentence of the post), <code>tempo:</code> (how long it takes), and <code>## Travou?</code> (if empty, it uses the help text from <code>config.json</code>).</p>
   </div></div>
 
   <div class="step"><div class="b">8</div><div>
@@ -295,7 +295,7 @@ link: https://exemplo.com/aula
   <span class="chip">What it includes and what it doesn’t</span>
   <h2>Made to fit your routine</h2>
   <p class="sub">The kit handles the tedious work (gathering, counting, formatting). Decisions and sending stay with the people who know the community.</p>
-  <div class="phase"><div class="tag">Includes</div><div class="d"><strong>Three outputs, three sources, tests</strong><span>Telegram split at the limit, simple email, mobile-friendly page; Markdown table, git log, and local feed; 21 tests that run offline.</span></div></div>
+  <div class="phase"><div class="tag">Includes</div><div class="d"><strong>Three outputs, three sources, tests</strong><span>Telegram split at the limit, simple email, mobile-friendly page; Markdown table, git log, and local feed; 22 tests that run offline.</span></div></div>
   <div class="phase"><div class="tag">Doesn’t do</div><div class="d"><strong>Doesn’t publish, read conversations, or make things up</strong><span>It doesn’t send messages or email, read the group history, or create wins or helpers: anything not recorded appears as empty.</span></div></div>
   <div class="phase"><div class="tag">You can</div><div class="d"><strong>Run it every week on the same day</strong><span>Set aside a regular time (for example, Sunday evening): draft, choose, generate, paste. Consistency matters more than perfect editing.</span></div></div>
   <div class="phase"><div class="tag">Language</div><div class="d"><strong>The post comes out in Portuguese</strong><span>The section titles of the post (A ÚNICA COISA, PODE IGNORAR…) are written in <code>semana.py</code>, in the functions <code>texto_telegram</code>, <code>html_pagina</code> and <code>html_email</code>. If your community speaks another language, translate them there. The <code>edicao.md</code> can already be written in English.</span></div></div>

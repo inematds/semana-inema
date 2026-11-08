@@ -136,9 +136,13 @@ def ler_tabela_md(texto, fonte):
     - data = a data escrita depois dessa palavra (dd/mm ou dd/mm/aaaa); se não houver, a data da coluna_data;
       ano que falta vem da coluna_data; sem data nenhuma → contada como "sem data" e fica de fora.
     """
-    col_t = chave(fonte.get("coluna_titulo", "Tema"))
-    col_d = chave(fonte.get("coluna_data", "Dono"))
-    col_e = chave(fonte.get("coluna_estado", "Estado"))
+    def nomes(campo, padrao):
+        v = fonte.get(campo, padrao)
+        return tuple(chave(x) for x in (v if isinstance(v, list) else [v]))
+
+    col_t = nomes("coluna_titulo", "Tema")
+    col_d = nomes("coluna_data", "Dono")
+    col_e = nomes("coluna_estado", "Estado")
     exige = sem_acento(fonte.get("so_com", "publicad")).lower()
     linhas = texto.splitlines()
     cont = {"linhas": 0, "acima_do_cabecalho": 0, "nao_publicadas": 0, "sem_data": 0, "publicadas": 0}
@@ -764,7 +768,11 @@ link: (o guia ou o vídeo que leva até lá)
 
 def carregar(args):
     cfg_path = Path(args.config).resolve()
-    cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
+    try:
+        cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as erro:
+        sys.exit(f"O {cfg_path.name} tem um erro na linha {erro.lineno}, coluna {erro.colno}: {erro.msg}.\n"
+                 "Quase sempre é vírgula: sobrando depois do último item de um bloco, ou faltando entre dois itens.")
     base = cfg_path.parent
     ate = dt.date.fromisoformat(args.ate) if args.ate else dt.date.today()
     de = dt.date.fromisoformat(args.de) if args.de else None

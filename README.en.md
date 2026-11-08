@@ -21,7 +21,7 @@ Who does what: 🧠 the moderator (you) · ⚙️ the script · 🤖 an agent (C
 | # | Step | Command / file | Who |
 |---|---|---|---|
 | 1 | View the ready-made example (reads the INEMA week copy included in the kit) | `python3 semana.py gerar --config config.exemplo.json --de 2026-11-01 --ate 2026-11-08` | ⚙️ |
-| 2 | Set up once: name, link, help text (the text in the "Stuck?" section), and your published items table | `config.json`, `publicados.md` | 🧠 |
+| 2 | Set up once: name, link, help text (the text in the "Stuck?" section), and your published items table | `cp config.modelo.json config.json`, then `config.json` and `publicados.md` | 🧠 |
 | 3 | During the week, note wins and who helped (with people’s permission) | `vitorias.md`, `ajudantes.md` | 🧠 |
 | 4 | Gather what came in during the week and build the draft | `python3 semana.py rascunho` → `saida/<data>/rascunho.md` | ⚙️ |
 | 5 | Choose the one thing, the "your case → your path" table, and what people can ignore | paste `prompts/escolher-a-unica-coisa.md` → write `edicao.md` | 🤖 (or 🧠 by hand) |
@@ -36,11 +36,11 @@ For a week that doesn’t end today, pass the dates in steps 4 and 7: `--ate YYY
 ```bash
 git clone https://github.com/inematds/semana-inema.git
 cd semana-inema
-python3 -m unittest discover -s tests      # must finish with OK
-python3 semana.py gerar --config config.exemplo.json --de 2026-11-01 --ate 2026-11-08   # the ready-made example
+python3 -m unittest discover -s tests
+python3 semana.py gerar --config config.exemplo.json --de 2026-11-01 --ate 2026-11-08
 ```
 
-Then, for your community: create `publicados.md`, adjust `config.json` (`"caminho": "publicados.md"`, `"coluna_data": "Data"`, delete `padrao_id_youtube`), delete the examples in `vitorias.md`/`ajudantes.md`, and run:
+Then, for your community: create `publicados.md`, copy the generic template over the config (`cp config.modelo.json config.json`; on Windows, `copy`), change the name, link and help text in it, delete the examples in `vitorias.md`/`ajudantes.md`, and run:
 
 ```bash
 python3 semana.py rascunho
@@ -105,6 +105,7 @@ python3 semana.py gerar    --de 2026-11-01 --ate 2026-11-08 --saida exemplos
 | `semana.py` | the script (draft and generate) |
 | `config.json` | community, link, help text, sources (comes with INEMA settings; reads the internal production table) |
 | `config.exemplo.json` | runs the example in any clone (reads `exemplos/2026-11-08/publicados.md`) |
+| `config.modelo.json` | generic template for your community (reads `publicados.md`); copy it over `config.json` |
 | `vitorias.md`, `ajudantes.md` | what the moderator notes during the week |
 | `edicao.md` | the week’s choices (the one thing, your case, what you can ignore); the included file is the INEMA example |
 | `prompts/escolher-a-unica-coisa.md` | ready-to-use prompt for Claude Code or Codex |

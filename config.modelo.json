@@ -1,0 +1,61 @@
+{
+  "_leia": "Modelo genérico: copie por cima do config.json (cp config.modelo.json config.json) e troque comunidade, link e plantao. Lê o publicados.md da pasta do kit.",
+  "comunidade": "Minha Comunidade",
+  "link": "https://minhacomunidade.com",
+  "titulo_post": "A SEMANA SEM SOBRECARGA",
+  "titulo_pagina": "A semana sem sobrecarga",
+  "janela_dias": 7,
+  "limite_telegram": 4096,
+  "max_o_que_chegou_telegram": 12,
+  "max_o_que_chegou_email": 15,
+  "vitorias": "vitorias.md",
+  "ajudantes": "ajudantes.md",
+  "edicao": "edicao.md",
+  "saida": "saida",
+  "plantao": {
+    "texto": "Poste a dúvida no grupo com 3 coisas: o print do erro, o comando que você rodou e o que esperava ver.",
+    "link": "https://t.me/meugrupo"
+  },
+  "ajudantes_vazio": "Ranking desta semana ainda vazio: o moderador anota em ajudantes.md quem respondeu dúvidas no grupo.",
+  "fontes": [
+    {
+      "tipo": "tabela_md",
+      "nome": "Publicados",
+      "caminho": "publicados.md",
+      "coluna_titulo": [
+        "Tema",
+        "Topic",
+        "Título"
+      ],
+      "coluna_data": [
+        "Data",
+        "Date",
+        "Fecha"
+      ],
+      "coluna_estado": [
+        "Estado",
+        "Status"
+      ],
+      "so_com": "publicad"
+    },
+    {
+      "tipo": "git_log",
+      "nome": "Commits dos projetos",
+      "ativo": false,
+      "repos": [
+        "~/projetos/meu-projeto"
+      ],
+      "ignorar_prefixos": [
+        "wip",
+        "merge"
+      ],
+      "link_repo": {}
+    },
+    {
+      "tipo": "feed",
+      "nome": "Feed local (JSON ou RSS salvo no disco)",
+      "ativo": false,
+      "caminho": "novidades.json"
+    }
+  ]
+}
