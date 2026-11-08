@@ -123,6 +123,20 @@ class TestArquivosDoModerador(unittest.TestCase):
         aj = semana.ler_ajudantes("- Caio — 3 respostas\n- Dora — 12 respostas — instalou o terminal de 3\n")
         self.assertEqual([x["nome"] for x in aj], ["Dora", "Caio"])
 
+    def test_edicao_em_ingles_e_espanhol(self):
+        en = semana.ler_edicao("## The one thing\nweek: 2026-11-15\ntitle: Build X\nwhy: because\nresult: X running\n"
+                               "link: https://x.y/z\n\n## Your case → your path\n| Your case | See |\n|---|---|\n"
+                               "| Uses ChatGPT | [Guide](https://g.h/i) |\n\n## You can ignore\n- News A — later\n")
+        self.assertEqual((en["unica"]["titulo"], en["unica"]["semana"], en["unica"]["porque"]), ("Build X", "2026-11-15", "because"))
+        self.assertEqual(len(en["caso"]), 1)
+        self.assertEqual(en["ignorar"], ["News A — later"])
+        es = semana.ler_edicao("## Lo único\nsemana: 2026-11-15\ntítulo: Arma X\npor qué: porque sí\n\n"
+                               "## Tu caso → tu camino\n| Tu caso | Mira |\n|---|---|\n| Usa ChatGPT | [Guía](https://g.h/i) |\n\n"
+                               "## Puedes ignorar\n- Noticia — después\n")
+        self.assertEqual((es["unica"]["titulo"], es["unica"]["porque"]), ("Arma X", "porque sí"))
+        self.assertEqual(len(es["caso"]), 1)
+        self.assertEqual(es["ignorar"], ["Noticia — después"])
+
     def test_edicao(self):
         ed = semana.ler_edicao("## A única coisa\ntítulo: Rode X\npor que: porque sim\nresultado: X rodando\n"
                                "link: https://x.y/z\n\n## Seu caso → seu caminho\n| Você usa | Veja |\n|---|---|\n"
@@ -139,7 +153,7 @@ class TestPontaAPonta(unittest.TestCase):
         try:
             shutil.copy(FIXTURE, tmp / "producoes.md")
             (tmp / "vitorias.md").write_text("- Ana — publicou o site — https://a.b/c\n", encoding="utf-8")
-            (tmp / "edicao.md").write_text("## A única coisa\ntítulo: Rode X\nresultado: X rodando\nlink: https://x.y/z\n", encoding="utf-8")
+            (tmp / "edicao.md").write_text("## A única coisa\nsemana: 2026-11-08\ntítulo: Rode X\nresultado: X rodando\nlink: https://x.y/z\n", encoding="utf-8")
             cfg = {"comunidade": "Teste", "link": "https://t.e", "fontes": [dict(FONTE, caminho="producoes.md")],
                    "plantao": {"texto": "Pergunte no grupo."}}
             (tmp / "config.json").write_text(json.dumps(cfg), encoding="utf-8")
@@ -158,10 +172,21 @@ class TestPontaAPonta(unittest.TestCase):
         finally:
             shutil.rmtree(tmp)
 
+    def test_edicao_de_outra_semana_recusa(self):
+        tmp = Path(tempfile.mkdtemp())
+        try:
+            (tmp / "edicao.md").write_text("## A única coisa\nsemana: 2026-11-01\ntítulo: Rode X\n", encoding="utf-8")
+            (tmp / "config.json").write_text(json.dumps({"fontes": []}), encoding="utf-8")
+            cfg = str(tmp / "config.json")
+            self.assertEqual(semana.main(["gerar", "--config", cfg, "--ate", "2026-11-08"]), 2)
+            self.assertEqual(semana.main(["gerar", "--config", cfg, "--ate", "2026-11-08", "--forcar"]), 0)
+        finally:
+            shutil.rmtree(tmp)
+
     def test_gerar_sem_unica_coisa_recusa(self):
         tmp = Path(tempfile.mkdtemp())
         try:
-            (tmp / "edicao.md").write_text("## A única coisa\n\n", encoding="utf-8")
+            (tmp / "edicao.md").write_text("## A única coisa\nsemana: 2026-11-08\n\n", encoding="utf-8")
             (tmp / "config.json").write_text(json.dumps({"fontes": []}), encoding="utf-8")
             self.assertEqual(semana.main(["gerar", "--config", str(tmp / "config.json"), "--ate", "2026-11-08"]), 2)
         finally:

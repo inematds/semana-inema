@@ -201,7 +201,7 @@
 
 <section id="guia"><div class="wrap">
   <span class="chip">Guia de uso · passo a passo</span>
-  <h2>Sua primeira edição em sete passos</h2>
+  <h2>Sua primeira edição em oito passos</h2>
   <p class="sub">Os comandos são os mesmos no Ubuntu e no Mac. Rode cada um no terminal, dentro da pasta do kit.</p>
 
   <div class="step"><div class="b">1</div><div>
@@ -218,47 +218,73 @@
   </div></div>
 
   <div class="step"><div class="b">3</div><div>
-    <h3>Troque o INEMA pela sua comunidade</h3>
-    <p>O kit vem configurado para o INEMA. Abra o <code>config.json</code> num editor de texto e troque o nome, o link, o texto do plantão e o caminho da sua fonte. No <code>caminho</code> da tabela, ponha o arquivo onde você anota o que publica (cada linha publicada precisa trazer, na coluna de estado, a palavra definida em <code>so_com</code> — no INEMA, <code>publicad</code>, que vale para publicado e publicada — e uma data no formato dia/mês/ano, como 07/11/2026). Para ligar uma fonte de commits ou de feed, mude <code>"ativo": false</code> para <code>true</code>.</p>
-<pre>"comunidade": "Minha Comunidade",
-"link": "https://minhacomunidade.com",
-"plantao": { "texto": "Poste a dúvida no grupo com o print do erro.", "link": "https://t.me/meugrupo" },
-"fontes": [ { "tipo": "tabela_md", "caminho": "publicados.md",
-              "coluna_titulo": "Tema", "coluna_data": "Data", "coluna_estado": "Estado" } ]</pre>
+    <h3>Veja o exemplo pronto funcionando</h3>
+    <p>O <code>config.exemplo.json</code> lê uma cópia da semana do INEMA que vem no kit (<code>exemplos/2026-11-08/publicados.md</code>). Assim você vê as três saídas antes de mexer em nada. Os arquivos saem em <code>saida/2026-11-08/</code>.</p>
+<pre><span class="k">python3 semana.py gerar --config config.exemplo.json --de 2026-11-01 --ate 2026-11-08</span></pre>
   </div></div>
 
   <div class="step"><div class="b">4</div><div>
+    <h3>Monte a sua tabela do que foi publicado</h3>
+    <p>Crie um arquivo <code>publicados.md</code> na pasta do kit e anote ali, uma linha por vez, o que a comunidade recebeu (vídeo, aula, guia, live). A coluna Estado começa com "publicado" e traz a data no formato dia/mês/ano e o link. Linha sem "publicado" (por exemplo "em produção") fica de fora.</p>
+<pre>| Tema | Data | Estado |
+|---|---|---|
+| Aula: o primeiro agente | 05/11/2026 | publicado 05/11/2026 — https://exemplo.com/aula |
+| Live de perguntas | 07/11/2026 | publicado 07/11/2026 — https://exemplo.com/live |
+| Guia do backup | 06/11/2026 | em produção |</pre>
+  </div></div>
+
+  <div class="step"><div class="b">5</div><div>
+    <h3>Troque o INEMA pela sua comunidade</h3>
+    <p>O kit vem configurado para o INEMA. Abra o <code>config.json</code> num editor de texto e troque o nome, o link e o plantão (o texto que aparece na seção "Travou?"). Na primeira fonte, ponha <code>"caminho": "publicados.md"</code>, <code>"coluna_data": "Data"</code> (o nome da coluna de data da sua tabela) e apague a linha <code>padrao_id_youtube</code>, que só serve para a tabela do INEMA. Deixe <code>"so_com": "publicad"</code>: é a palavra que marca a linha como publicada e vale para publicado e publicada. As outras duas fontes (commits e feed) ficam desligadas com <code>"ativo": false</code>.</p>
+<pre>"comunidade": "Minha Comunidade",
+"link": "https://minhacomunidade.com",
+"plantao": { "texto": "Poste a dúvida no grupo com o print do erro.", "link": "https://t.me/meugrupo" },
+"fontes": [ { "tipo": "tabela_md", "nome": "Publicados", "caminho": "publicados.md",
+              "coluna_titulo": "Tema", "coluna_data": "Data", "coluna_estado": "Estado", "so_com": "publicad" } ]</pre>
+  </div></div>
+
+  <div class="step"><div class="b">6</div><div>
     <h3>Anote vitórias e ajudantes durante a semana</h3>
-    <p>Abra <code>vitorias.md</code> e <code>ajudantes.md</code>, apague os exemplos e escreva uma linha por pessoa. Peça licença antes de citar o nome. O ranking de ajudantes é opcional.</p>
+    <p>Abra <code>vitorias.md</code> e <code>ajudantes.md</code>, apague as linhas de exemplo do INEMA e escreva uma linha por pessoa. Peça licença antes de citar o nome. O ranking de ajudantes é opcional; vazio, aparece como vazio.</p>
 <pre>- Nome do membro — publicou o primeiro site com IA — https://link-do-site
 - Nome do membro — 12 respostas — ajudou 3 pessoas a abrir o terminal</pre>
   </div></div>
 
-  <div class="step"><div class="b">5</div><div>
-    <h3>Monte o rascunho da semana</h3>
-    <p>Lê as fontes dos últimos 7 dias (até hoje) e grava <code>saida/&lt;data&gt;/rascunho.md</code> com tudo o que chegou. Para outra semana, use <code>--ate</code> (último dia) e, se quiser, <code>--de</code> (primeiro dia).</p>
-<pre><span class="k">python3 semana.py rascunho</span>
-<span class="k">python3 semana.py rascunho --de 2026-11-01 --ate 2026-11-08</span></pre>
-  </div></div>
-
-  <div class="step"><div class="b">6</div><div>
-    <h3>Escolha a única coisa</h3>
-    <p>Abra o Claude Code ou o Codex dentro da pasta do kit e cole o texto de <code>prompts/escolher-a-unica-coisa.md</code>. O agente lê o rascunho, escolhe com o critério "1 resultado funcionando" e escreve o <code>edicao.md</code>. Sem agente, copie o modelo do fim do rascunho para <code>edicao.md</code> e preencha à mão. Leia o resultado antes de seguir: a decisão é sua.</p>
-<pre><span class="k">claude</span>    <span class="c"># ou: codex — depois cole o pedido do arquivo prompts/escolher-a-unica-coisa.md</span></pre>
-  </div></div>
-
   <div class="step"><div class="b">7</div><div>
+    <h3>Monte o rascunho e escolha a única coisa</h3>
+    <p>O rascunho lê as fontes dos últimos 7 dias (até hoje) e grava <code>saida/&lt;data&gt;/rascunho.md</code>. Para outra semana, use <code>--ate</code> (último dia) e, se quiser, <code>--de</code> (primeiro dia).</p>
+<pre><span class="k">python3 semana.py rascunho</span></pre>
+    <p>Depois escreva o <code>edicao.md</code>. O que vem no kit é o exemplo do INEMA; a sua edição escreve por cima dele. Com agente: abra o <a href="https://claude.com/product/claude-code" target="_blank" rel="noopener">Claude Code</a> ou o <a href="https://github.com/openai/codex" target="_blank" rel="noopener">Codex</a> (assistentes de IA que trabalham na pasta do seu computador) dentro da pasta do kit e cole o texto de <code>prompts/escolher-a-unica-coisa.md</code>; ele lê o rascunho e escolhe com o critério "1 resultado funcionando". Sem agente: preencha à mão neste formato (o mesmo modelo está no fim do rascunho). Leia o resultado antes de seguir: a decisão é sua.</p>
+<pre># Edição da semana
+
+## A única coisa
+semana: 2026-11-15
+título: Monte o seu primeiro agente
+por que: Quem tem um agente rodando entende o resto das novidades.
+resultado: O agente responde a uma pergunta sua no terminal.
+link: https://exemplo.com/aula
+
+## Seu caso → seu caminho
+| Seu caso | Veja |
+|---|---|
+| Usa ChatGPT no dia a dia | [Aula do ChatGPT](https://exemplo.com/chatgpt) |
+
+## Pode ignorar
+- Notícia X — curiosidade; não muda o que você faz nesta semana.</pre>
+    <p>A linha <code>semana:</code> tem que ser o último dia da semana que você vai gerar. Se ficar a de uma semana antiga, o kit recusa, para não publicar a edição velha por engano.</p>
+  </div></div>
+
+  <div class="step"><div class="b">8</div><div>
     <h3>Gere os três formatos e publique você mesmo</h3>
-    <p>Grava <code>telegram.md</code> (e <code>telegram-2.md</code> se passar do limite), <code>email.html</code> e <code>pagina.html</code> em <code>saida/&lt;data&gt;/</code>. Cole o texto do Telegram no grupo, abra o e-mail no navegador para copiar, e ponha a página no seu site. Use o mesmo <code>--de</code>/<code>--ate</code> do rascunho.</p>
-<pre><span class="k">python3 semana.py gerar</span>
-<span class="k">python3 semana.py gerar --de 2026-11-01 --ate 2026-11-08</span></pre>
+    <p>Grava <code>telegram.md</code> (e <code>telegram-2.md</code> se passar do limite), <code>email.html</code> e <code>pagina.html</code> em <code>saida/&lt;data&gt;/</code>. Cole o texto do Telegram no grupo, abra o e-mail no navegador para copiar, e ponha a página no seu site. Se usou <code>--de</code>/<code>--ate</code> no rascunho, use os mesmos aqui.</p>
+<pre><span class="k">python3 semana.py gerar</span></pre>
   </div></div>
 </div></section>
 
 <section id="exemplos"><div class="wrap">
   <span class="chip">Exemplo real</span>
   <h2>A semana do INEMA, de 01 a 08/11/2026</h2>
-  <p class="sub">O kit rodou na tabela de produções do INEMA. Das 90 linhas da tabela, 50 estavam marcadas como publicadas e com data; 26 caíram na semana e viraram "O que chegou". A única coisa escolhida foi: responder as 6 perguntas da Escada do Negócio com IA e escolher um negócio para começar. O texto do Telegram deu 3.671 caracteres e coube numa mensagem só. As vitórias do exemplo são entregas do próprio INEMA, marcadas como exemplo, e o ranking de ajudantes ficou vazio: o kit não inventa nomes.</p>
+  <p class="sub">O kit rodou na tabela de produções do INEMA. Das 90 linhas da tabela, 50 estavam marcadas como publicadas e com data; 26 caíram na semana e viraram "O que chegou". A única coisa escolhida foi: responder as 6 perguntas da Escada do Negócio com IA e escolher um negócio para começar. O texto do Telegram deu 3.671 caracteres e coube numa mensagem só. As vitórias do exemplo são entregas do próprio INEMA, marcadas como exemplo, e o ranking de ajudantes ficou vazio: o kit não inventa nomes. Para refazer este exemplo no seu computador, use o passo 3 do guia.</p>
   <div class="ex">
     <figure><img src="assets/exemplo-pagina.jpg" alt="Página da semana no computador: a única coisa, seu caso e seu caminho, vitórias" loading="lazy"><figcaption>A página da semana no computador (1440 px). Arquivos completos em <a href="https://github.com/inematds/semana-inema/tree/main/exemplos/2026-11-08" target="_blank" rel="noopener">exemplos/2026-11-08</a>.</figcaption></figure>
     <figure><img src="assets/exemplo-celular.jpg" alt="A mesma página no celular, sem rolagem lateral" loading="lazy"><figcaption>A mesma página no celular (390 px): a tabela vira lista e nada vaza para o lado.</figcaption></figure>
@@ -269,7 +295,7 @@
   <span class="chip">O que tem e o que não tem</span>
   <h2>Feito para caber na sua rotina</h2>
   <p class="sub">O kit faz o trabalho chato (juntar, contar, formatar). As decisões e o envio ficam com quem conhece a comunidade.</p>
-  <div class="phase"><div class="tag">Tem</div><div class="d"><strong>Três saídas, três fontes, testes</strong><span>Telegram dividido no limite, e-mail simples, página que funciona no celular; tabela Markdown, git log e feed local; 19 testes que rodam sem internet.</span></div></div>
+  <div class="phase"><div class="tag">Tem</div><div class="d"><strong>Três saídas, três fontes, testes</strong><span>Telegram dividido no limite, e-mail simples, página que funciona no celular; tabela Markdown, git log e feed local; 21 testes que rodam sem internet.</span></div></div>
   <div class="phase"><div class="tag">Não faz</div><div class="d"><strong>Não publica, não lê conversas, não inventa</strong><span>Não envia mensagem nem e-mail, não lê o histórico do grupo e não cria vitória ou ajudante: o que não estiver anotado aparece como vazio.</span></div></div>
   <div class="phase"><div class="tag">Você pode</div><div class="d"><strong>Rodar toda semana no mesmo dia</strong><span>Reserve um horário fixo (por exemplo, domingo à noite): rascunho, escolha, gerar, colar. A constância vale mais que a edição perfeita.</span></div></div>
 </div></section>

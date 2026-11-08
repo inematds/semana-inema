@@ -1,0 +1,31 @@
+{
+  "_leia": "Exemplo que roda em qualquer clone: lê a cópia limpa da semana 01–08/11/2026 do INEMA. Use: python3 semana.py gerar --config config.exemplo.json --de 2026-11-01 --ate 2026-11-08",
+  "comunidade": "INEMA.CLUB",
+  "link": "https://inema.club",
+  "titulo_post": "A SEMANA SEM SOBRECARGA",
+  "titulo_pagina": "A semana sem sobrecarga",
+  "janela_dias": 7,
+  "limite_telegram": 4096,
+  "max_o_que_chegou_telegram": 12,
+  "max_o_que_chegou_email": 15,
+  "vitorias": "vitorias.md",
+  "ajudantes": "ajudantes.md",
+  "edicao": "edicao.md",
+  "saida": "saida",
+  "plantao": {
+    "texto": "Poste a dúvida no grupo do assunto no Telegram (VIP/PRO) com 3 coisas: o print do erro, o comando que você rodou e o que esperava ver. Quem já passou por isso responde.",
+    "link": "https://inema.club"
+  },
+  "ajudantes_vazio": "Ranking desta semana ainda vazio: o moderador anota em ajudantes.md quem respondeu dúvidas no grupo.",
+  "fontes": [
+    {
+      "tipo": "tabela_md",
+      "nome": "Publicados do INEMA (extrato 01–08/11/2026)",
+      "caminho": "exemplos/2026-11-08/publicados.md",
+      "coluna_titulo": "Tema",
+      "coluna_data": "Data",
+      "coluna_estado": "Estado",
+      "so_com": "publicad"
+    }
+  ]
+}

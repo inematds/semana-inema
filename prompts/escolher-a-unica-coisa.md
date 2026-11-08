@@ -1,7 +1,7 @@
 # Pedido: escolher a única coisa da semana
 
 Cole o texto abaixo no Claude Code ou no Codex, aberto na pasta do kit (`semana-inema`),
-depois de rodar `python3 semana.py rascunho`. Troque o que está entre [colchetes].
+depois de rodar `python3 semana.py rascunho`. O `edicao.md` que vem no kit é o exemplo do INEMA: este pedido escreve por cima dele. Troque o que está entre [colchetes].
 
 ---
 
@@ -29,6 +29,7 @@ não fazendo nada. Sua tarefa é escolher UMA coisa para a semana e dizer o que 
    (1 frase: quantas coisas saíram e que você só precisa de uma)
 
    ## A única coisa
+   semana: (o último dia da semana, AAAA-MM-DD, igual ao topo do rascunho)
    título: (começa com verbo: "Responda…", "Monte…", "Rode…")
    por que: (1 frase: o que muda para quem fizer)
    resultado: (o que a pessoa tem FUNCIONANDO no fim)

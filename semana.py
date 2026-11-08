@@ -313,6 +313,7 @@ def coletar(cfg, base, jan):
             arq = caminho(base, f["caminho"])
             if not arq.exists():
                 print(f"  aviso: tabela {arq} não existe — pulei", file=sys.stderr)
+                resumo.append((f.get("nome", "tabela"), {"ARQUIVO_NAO_ENCONTRADO": str(arq)}))
                 continue
             itens, cont = ler_tabela_md(arq.read_text(encoding="utf-8"), f)
             dentro = [x for x in itens if na_janela(x["data"], jan)]
@@ -367,6 +368,18 @@ def ler_ajudantes(texto):
     return sorted(out, key=lambda x: -x["pontos"])
 
 
+# Nomes aceitos no edicao.md (PT, EN, ES), para o guia traduzido funcionar igual.
+SECOES_EDICAO = {
+    "unica": ("a unica coisa", "the one thing", "lo unico"),
+    "caso": ("seu caso", "your case", "tu caso"),
+    "ignorar": ("pode ignorar", "you can ignore", "puedes ignorar"),
+    "travou": ("travou", "stuck", "te trabaste"),
+    "abertura": ("abertura", "opening", "apertura"),
+}
+CHAVES_UNICA = {"title": "titulo", "why": "porque", "result": "resultado", "time": "tempo", "tiempo": "tempo",
+                "week": "semana", "enlace": "link"}
+
+
 def ler_edicao(texto):
     """Lê o edicao.md preenchido (moderador ou agente). Seções por `## `."""
     texto = re.sub(r"<!--.*?-->", "", texto, flags=re.S)
@@ -378,21 +391,23 @@ def ler_edicao(texto):
         elif atual is not None:
             secoes[atual].append(ln)
 
-    def acha(prefixo):
-        return next((v for k, v in secoes.items() if k.startswith(prefixo)), [])
+    def acha(nome):
+        nomes = SECOES_EDICAO[nome]
+        return next((v for k, v in secoes.items() if k.startswith(nomes)), [])
 
     unica = {}
-    for ln in acha("a unica coisa"):
+    for ln in acha("unica"):
         m = re.match(r"^\s*[-*]?\s*([^:]{2,20}):\s*(.+)$", ln)
         if m:
-            unica[chave(m.group(1)).replace(" ", "")] = m.group(2).strip()
+            k = chave(m.group(1)).replace(" ", "")
+            unica[CHAVES_UNICA.get(k, k)] = m.group(2).strip()
     caso = []
-    for ln in acha("seu caso"):
+    for ln in acha("caso"):
         if ln.strip().startswith("|") and not re.match(r"^\s*\|[\s:\-|]+\|\s*$", ln):
             c = _celulas(ln)
-            if len(c) >= 2 and chave(c[0]) not in ("voce usa", "seu caso"):
+            if len(c) >= 2 and chave(c[0]) not in ("voce usa", "seu caso", "your case", "tu caso", "you use", "usas"):
                 caso.append({"usa": limpa_md(c[0]), "veja": limpa_md(c[1]), "link": primeira_url(c[1])})
-    ignorar = list(_linhas_lista("\n".join(acha("pode ignorar"))))
+    ignorar = list(_linhas_lista("\n".join(acha("ignorar"))))
     travou = "\n".join(acha("travou")).strip()
     abertura = "\n".join(acha("abertura")).strip()
     return {
@@ -402,6 +417,7 @@ def ler_edicao(texto):
             "resultado": unica.get("resultado", ""),
             "tempo": unica.get("tempo", ""),
             "link": primeira_url(unica.get("link", "")),
+            "semana": unica.get("semana", "").strip(),
         },
         "caso": caso,
         "ignorar": [limpa_md(x) for x in ignorar],
@@ -712,7 +728,7 @@ def texto_rascunho(cfg, jan, chegou, resumo, vitorias, ajudantes):
     L.append("")
     L.append("## Modelo do edicao.md (copie, preencha e salve como edicao.md)")
     L.append("```markdown")
-    L.append(MODELO_EDICAO.strip())
+    L.append(MODELO_EDICAO.strip().replace("(o último dia da semana, AAAA-MM-DD — o mesmo --ate do rascunho)", jan[1].isoformat()))
     L.append("```")
     return "\n".join(L) + "\n"
 
@@ -724,6 +740,7 @@ MODELO_EDICAO = """
 (1 frase curta, opcional)
 
 ## A única coisa
+semana: (o último dia da semana, AAAA-MM-DD — o mesmo --ate do rascunho)
 título: (a tarefa, com verbo: "Faça…", "Monte…", "Rode…")
 por que: (1 frase: o que muda na vida de quem fizer)
 resultado: (o que a pessoa tem FUNCIONANDO no fim — não "assistiu o vídeo")
@@ -761,6 +778,15 @@ def carregar(args):
     return cfg, base, jan, chegou, resumo, vitorias, ajudantes, pasta
 
 
+def avisa_fontes(resumo):
+    faltam = [c["ARQUIVO_NAO_ENCONTRADO"] for _, c in resumo if "ARQUIVO_NAO_ENCONTRADO" in c]
+    if faltam:
+        print("\nATENÇÃO: fonte não encontrada, \"O que chegou\" saiu sem ela: " + ", ".join(faltam))
+        print("Confira o 'caminho' em config.json (para testar o exemplo: --config config.exemplo.json).")
+    elif not resumo:
+        print("\nATENÇÃO: nenhuma fonte ativa em config.json; \"O que chegou\" saiu vazio.")
+
+
 def cmd_rascunho(args):
     cfg, base, jan, chegou, resumo, vitorias, ajudantes, pasta = carregar(args)
     pasta.mkdir(parents=True, exist_ok=True)
@@ -771,6 +797,7 @@ def cmd_rascunho(args):
     print(f"O que chegou: {len(chegou)} itens · vitórias: {len(vitorias)} · ajudantes: {len(ajudantes)}")
     print(f"Rascunho: {pasta / 'rascunho.md'}")
     print("Agora: cole prompts/escolher-a-unica-coisa.md no Claude Code/Codex para preencher o edicao.md.")
+    avisa_fontes(resumo)
     return 0
 
 
@@ -781,6 +808,12 @@ def cmd_gerar(args):
         print(f"Falta o {ep}. Rode `semana.py rascunho` e preencha a edição (ou use o prompt).", file=sys.stderr)
         return 2
     ed = ler_edicao(ep.read_text(encoding="utf-8"))
+    sem = ed["unica"].get("semana", "")
+    if sem != jan[1].isoformat() and not args.forcar:
+        print(f"O {ep.name} é da semana '{sem or '(sem data)'}', e você está gerando a semana que termina em "
+              f"{jan[1].isoformat()}.\nPreencha a edição desta semana (linha 'semana: {jan[1].isoformat()}' em "
+              "'## A única coisa') ou use --forcar.", file=sys.stderr)
+        return 2
     if not ed["unica"]["titulo"]:
         print(f"O {ep} não tem 'título:' em '## A única coisa'. Sem a única coisa não há edição.", file=sys.stderr)
         return 2
@@ -804,6 +837,7 @@ def cmd_gerar(args):
           + ", ".join(f"{n} ({c})" for n, c in nomes))
     print(f"Arquivos em {pasta}: " + ", ".join([n for n, _ in nomes] + ["email.html", "pagina.html"]))
     print("Nada foi publicado. Cole/publique você mesmo.")
+    avisa_fontes(resumo)
     return 0
 
 
@@ -821,6 +855,7 @@ def main(argv=None):
         p.add_argument("--ajudantes")
         if nome == "gerar":
             p.add_argument("--edicao")
+            p.add_argument("--forcar", action="store_true", help="gera mesmo se a edicao.md for de outra semana")
     args = ap.parse_args(argv)
     return cmd_rascunho(args) if args.cmd == "rascunho" else cmd_gerar(args)
 

@@ -9,6 +9,7 @@ a partir do rascunho (exemplos/2026-11-08/rascunho.md). Troque toda semana.
 Saíram 26 publicações no INEMA nesta semana. Você não precisa de todas. Precisa de uma.
 
 ## A única coisa
+semana: 2026-11-08
 título: Responda as 6 perguntas da Escada do Negócio com IA e escolha UM negócio para começar
 por que: Entre 13 negócios com IA, quem tenta todos não termina nenhum; o teste aponta o degrau que combina com o que você já sabe fazer.
 resultado: Você termina com um negócio escolhido e a oferta pronta dele na tela: a frase para vender, o primeiro cliente para procurar e o próximo degrau.

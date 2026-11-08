@@ -49,6 +49,7 @@ Depois: `python3 semana.py gerar` (com o mesmo --ate/--de).
 (1 frase curta, opcional)
 
 ## A única coisa
+semana: 2026-11-08
 título: (a tarefa, com verbo: "Faça…", "Monte…", "Rode…")
 por que: (1 frase: o que muda na vida de quem fizer)
 resultado: (o que a pessoa tem FUNCIONANDO no fim — não "assistiu o vídeo")
